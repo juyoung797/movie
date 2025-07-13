@@ -47,7 +47,7 @@ public class MovieController {
         if (bindingResult.hasErrors()) return "movie-form";
         Movie movie = Movie.builder()
                 .title(movieDto.getTitle())
-                .releaseYear(movieDto.getReleaseYear())
+                .releasedYear(movieDto.getReleasedYear())
                 .build();
         movieService.create(movie);
         return "redirect:/movie";

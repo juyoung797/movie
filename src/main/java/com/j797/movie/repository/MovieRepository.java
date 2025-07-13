@@ -18,14 +18,14 @@ public class MovieRepository {
         Movie movie = Movie.builder()
                 .id(rs.getInt("id"))
                 .title(rs.getString("title"))
-                .releaseYear(rs.getInt("release_year"))
+                .releasedYear(rs.getInt("release_year"))
                 .build();
         return movie;
     };
 
     public int save(Movie movie) {
         String sql = "INSERT INTO movies (title, release_year) VALUES (?, ?)";
-        return jdbcTemplate.update(sql, movie.getTitle(), movie.getReleaseYear());
+        return jdbcTemplate.update(sql, movie.getTitle(), movie.getReleasedYear());
     }
 
     public List<Movie> findAll() {
