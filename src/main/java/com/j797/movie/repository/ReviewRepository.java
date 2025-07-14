@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -46,9 +47,9 @@ public class ReviewRepository {
         return jdbcTemplate.query(sql, reviewRowMapper, userId);
     }
 
-    public Review findById(int id) {
+    public Optional<Review> findById(int id) {
         String sql = "SELECT * FROM reviews WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reviewRowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reviewRowMapper, id));
     }
 
     public int update(Review review) {

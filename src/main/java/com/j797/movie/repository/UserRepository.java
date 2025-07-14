@@ -25,7 +25,12 @@ public class UserRepository {
 
     public Optional<User> findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, userRowMapper, username));
+        try {
+            User user = jdbcTemplate.queryForObject(sql, userRowMapper, username);
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public int save(User user) {

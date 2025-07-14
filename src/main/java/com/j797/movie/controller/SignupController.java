@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class SignupController {
@@ -33,8 +35,8 @@ public class SignupController {
             return "signup";
         }
 
-        // 중복 가입 여부 체크
-        if (userService.getByUsername((SignupDto.getUsername())) != null) {
+        Optional<User> existingUser = userService.getByUsername(SignupDto.getUsername());
+        if (existingUser.isPresent()) {
             model.addAttribute("error", "이미 사용중인 아이디입니다");
             return "signup";
         }

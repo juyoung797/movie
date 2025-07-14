@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,8 +26,9 @@ public class MovieRateRepository {
         return jdbcTemplate.query(sql, movieRateRowMapper);
     }
 
-    public MovieRate findByMovieId(int movieId) {
+    public Optional<MovieRate> findByMovieId(int movieId) {
         String sql = "SELECT * FROM movie_average_rating WHERE movie_id = ?";
-        return jdbcTemplate.queryForObject(sql, movieRateRowMapper, movieId);
+        return Optional.ofNullable(jdbcTemplate
+                .queryForObject(sql, movieRateRowMapper, movieId));
     }
 }

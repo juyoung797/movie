@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -35,22 +37,23 @@ public class LoginController {
         if (bindingResult.hasErrors()) {
             return "login";
         }
-        try {
-            User user = userService.getByUsername(loginDto.getUsername());
 
-            if (!user.getPassword().equals(loginDto.getPassword())) {
-                model.addAttribute("error", "비밀번호가 올바르지 않습니다");
+        Optional<User> userOpt = userService.getByUsername(loginDto.getUsername());
 
-                return "login";
-            }
-            httpSession.setAttribute("user", user);
-
-            return "redirect:/todos";
-        } catch (Exception e) {
+        if (userOpt.isEmpty()) {
             model.addAttribute("error", "존재하지 않는 사용자입니다.");
-
             return "login";
         }
+
+        User user = userOpt.get();
+
+        if (!user.getPassword().equals(loginDto.getPassword())) {
+            model.addAttribute("error", "비밀번호가 올바르지 않습니다");
+            return "login";
+        }
+
+        httpSession.setAttribute("user", user);
+        return "redirect:/movie";
     }
 
     @GetMapping("/logout")

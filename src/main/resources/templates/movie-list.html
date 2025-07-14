@@ -17,14 +17,30 @@
         <th>ID</th>
         <th>제목</th>
         <th>개봉연도</th>
+        <th>평점</th>
+        <th>리뷰수</th>
+
         <th>액션</th>
     </tr>
     </thead>
     <tbody th:each="movie: ${movies}">
     <tr>
         <td th:text="${movie.id}"></td>
-        <td th:text="${movie.title}"></td>
+        <td>
+            <a th:text="${movie.title}" th:href="@{'/movie/detail/' + ${movie.id}}"></a>
+        </td>
         <td th:text="${movie.releasedYear}"></td>
+        <td>
+            <div class="star-ratings">
+                <div class="star-ratings-fill" th:style="'width:' + (${movie.avgRating} / 5.0 * 100) + '%'" >
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <div class="star-ratings-base">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+            </div>
+        </td>
+        <td th:text="${movie.reviewCount}"></td>
         <td>
             <a th:href="@{'/movie/edit/' + ${movie.id}}">수정</a>
             <form th:action="@{'/movie/delete/' + ${movie.id}}" method="post" style="display:inline;">

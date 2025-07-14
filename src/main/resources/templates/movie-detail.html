@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${movie.title}"></title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
+</head>
+<body class="container">
+<h1 th:text="${movie.title}"></h1>
+<h3 th:text="${movie.releasedYear}"></h3>
+<h3 th:text="${movie.avgRating}"></h3>
+<p>
+<form th:action="@{'/movie/' + ${movie.id} + '/review/add'}" method="get" style="display:inline;">
+    <input type="hidden" name="movieId" th:value="${movie.id}" />
+    <button type="submit" class="btn">
+        ➕ 리뷰 추가
+    </button>
+</form>
+</p>
+<div class="review-box" th:each="review : ${reviewList}">
+    <p>
+    <div class="star-ratings">
+        <div class="star-ratings-fill" th:style="'width:' + (${movie.avgRating} / 5.0 * 100) + '%'">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <div class="star-ratings-base">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+    </div>
+    <span th:text="${review.comment}">기대 이상이었어요!</span><br>
+    <small th:text="${#temporals.format(review.reviewedAt, 'yyyy.MM.dd HH:mm')}"></small>
+    </p>
+    <hr>
+</div>
+</body>
+</html>
