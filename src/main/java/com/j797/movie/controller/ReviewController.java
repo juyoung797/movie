@@ -15,29 +15,29 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/movie")
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @GetMapping("/{movieId}/review/add")
-    public String addForm(@PathVariable Integer movieId, Model model) {
+    @GetMapping("/movie/{movieId}/review/add")
+    public String addForm(
+            @PathVariable Integer movieId,
+            Model model
+    ) {
         ReviewDto reviewDto = new ReviewDto();
-        reviewDto.setMovieId(movieId);  // 필수값 세팅
+        reviewDto.setMovieId(movieId);
         model.addAttribute("reviewDto", reviewDto);
         return "review-form";
     }
 
-    @PostMapping("/{movieId}/review/add")
+    @PostMapping("/movie/{movieId}/review/add")
     public String add(
             @PathVariable Integer movieId,
             @Valid @ModelAttribute ReviewDto reviewDto,
             BindingResult bindingResult,
             HttpSession session
     ) {
-        System.out.println("바인딩에러 전");
         if (bindingResult.hasErrors()) return "review-form";
-        System.out.println("바인딩에러 후");
 
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
@@ -55,5 +55,30 @@ public class ReviewController {
         reviewService.create(review);
         System.out.println("생성완료");
         return "redirect:/movie/detail/" + reviewDto.getMovieId();
+    }
+
+    @GetMapping("/review/{id}")
+    public String editForm(
+            @PathVariable Integer id,
+            Model model
+    ) {
+        model.addAttribute("review", reviewService.getById(id));
+        return "review-form";
+    }
+
+    @PostMapping("/review")
+    public String edit(
+            @Valid @ModelAttribute ReviewDto reviewdto,
+            BindingResult bindingResult
+    ) {
+        return "redirect:/movie/detail/" + reviewdto.getMovieId();
+    }
+
+    @PostMapping("/review/{id}")
+    public String delete(
+            @PathVariable Integer id
+    ) {
+        reviewService.delete(id);
+        return "redirect:/movie/detail/" + id;
     }
 }
