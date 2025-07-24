@@ -59,7 +59,7 @@ public class MovieController {
         return "redirect:/movie";
     }
 
-    @PostMapping("/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model) {
         model.addAttribute("movie", movieService.getById(id));
         return "movie-form";
@@ -67,14 +67,14 @@ public class MovieController {
 
     @PostMapping("/edit")
     public String edit(
-            @Valid @ModelAttribute MovieDto dto,
+            @Valid @ModelAttribute MovieDto moviedto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) return "movie-form";
 
-        Movie movie = movieService.getById(dto.getId());
-        movie.setTitle(dto.getTitle());
-        movie.setReleaseYear(dto.getReleasedYear());
+        Movie movie = movieService.getById(moviedto.getId());
+        movie.setTitle(moviedto.getTitle());
+        movie.setReleaseYear(moviedto.getReleasedYear());
         movieService.update(movie);
         return "redirect:/movie";
     }
