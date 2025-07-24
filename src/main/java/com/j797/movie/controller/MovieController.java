@@ -61,8 +61,16 @@ public class MovieController {
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("movie", movieService.getById(id));
-        return "movie-form";
+        Movie movie = movieService.getById(id);
+        if (movie != null) {
+            MovieDto movieDto = new MovieDto();
+            movieDto.setId(movie.getId());
+            movieDto.setTitle(movie.getTitle());
+            movieDto.setReleasedYear(movie.getReleaseYear());
+            model.addAttribute("movieDto", movieDto);
+            return "movie-form";
+        }
+        return "redirect:/movie";
     }
 
     @PostMapping("/edit")
@@ -79,7 +87,7 @@ public class MovieController {
         return "redirect:/movie";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String delete(
             @PathVariable Integer id
     ) {
@@ -87,13 +95,12 @@ public class MovieController {
         return "redirect:/movie";
     }
 
-
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable Integer id, Model model) {
         MovieDetailDto movieDetailDto = movieService.getByIdWithRate(id);
         List<Review> reviewList = reviewService.getByMovieId(id);
 
-        model.addAttribute("movie", movieDetailDto);
+        model.addAttribute("movieDetailDto", movieDetailDto);
         model.addAttribute("reviewList", reviewList);
         return "movie-detail";
     }
