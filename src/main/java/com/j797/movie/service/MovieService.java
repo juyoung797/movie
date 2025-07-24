@@ -1,11 +1,10 @@
 package com.j797.movie.service;
 
-import com.j797.movie.dto.MovieWithRateDto;
+import com.j797.movie.dto.MovieDetailDto;
 import com.j797.movie.model.Movie;
 import com.j797.movie.model.MovieRate;
 import com.j797.movie.repository.MovieRateRepository;
 import com.j797.movie.repository.MovieRepository;
-import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,41 +30,39 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public MovieWithRateDto getByIdWithRate(Integer id) {
+    public MovieDetailDto getByIdWithRate(Integer id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("영화 없음"));
 
         MovieRate rate = movieRateRepository.findByMovieId(id)
                 .orElseThrow(() -> new NoSuchElementException("평점 정보 없음"));
 
-        return MovieWithRateDto.builder()
+        return MovieDetailDto.builder()
                 .id(movie.getId())
                 .title(movie.getTitle())
-                .releasedYear(movie.getReleasedYear())
+                .releasedYear(movie.getReleaseYear())
                 .avgRating(rate.getAvgRating())
                 .reviewCount(rate.getReviewCount())
                 .build();
     }
 
-
-    public List<MovieWithRateDto> getAllWithRates() {
+    public List<MovieDetailDto> getAllWithRates() {
         List<Movie> movieList = movieRepository.findAll();
-        List<MovieWithRateDto> dtoList = new ArrayList<>();
+        List<MovieDetailDto> dtoList = new ArrayList<>();
 
         for (Movie movie : movieList) {
             MovieRate rate = movieRateRepository.findByMovieId(movie.getId())
                     .orElseThrow(() -> new NoSuchElementException("평점 정보 없음"));
-            dtoList.add(MovieWithRateDto.builder()
+            dtoList.add(MovieDetailDto.builder()
                     .id(movie.getId())
                     .title(movie.getTitle())
-                    .releasedYear(movie.getReleasedYear())
+                    .releasedYear(movie.getReleaseYear())
                     .avgRating(rate.getAvgRating())
                     .reviewCount(rate.getReviewCount())
                     .build());
         }
         return dtoList;
     }
-
 
     public int update(Movie movie) {
         return movieRepository.update(movie);

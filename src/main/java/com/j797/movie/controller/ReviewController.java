@@ -1,9 +1,6 @@
 package com.j797.movie.controller;
 
-import com.j797.movie.dto.MovieDto;
-import com.j797.movie.dto.MovieWithRateDto;
 import com.j797.movie.dto.ReviewDto;
-import com.j797.movie.model.Movie;
 import com.j797.movie.model.Review;
 import com.j797.movie.model.User;
 import com.j797.movie.service.ReviewService;

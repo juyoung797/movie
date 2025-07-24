@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MovieWithRateDto {
+public class MovieDetailDto {
     private Integer id;
 
     @NotBlank(message = "영화제목을 입력하세요")

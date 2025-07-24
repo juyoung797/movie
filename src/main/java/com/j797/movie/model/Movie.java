@@ -8,5 +8,5 @@ import lombok.Data;
 public class Movie {
     private Integer id;
     private String title;
-    private Integer releasedYear;
+    private Integer releaseYear;
 }

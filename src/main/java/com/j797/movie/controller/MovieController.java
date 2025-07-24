@@ -1,9 +1,8 @@
 package com.j797.movie.controller;
 
 import com.j797.movie.dto.MovieDto;
-import com.j797.movie.dto.MovieWithRateDto;
+import com.j797.movie.dto.MovieDetailDto;
 import com.j797.movie.model.Movie;
-import com.j797.movie.model.MovieRate;
 import com.j797.movie.model.Review;
 import com.j797.movie.model.User;
 import com.j797.movie.service.MovieRateService;
@@ -33,19 +32,9 @@ public class MovieController {
 
     @GetMapping
     public String list(Model model) {
-        List<MovieWithRateDto> movies = movieService.getAllWithRates();
+        List<MovieDetailDto> movies = movieService.getAllWithRates();
         model.addAttribute("movies", movies);
         return "movie-list";
-    }
-
-    @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
-        MovieWithRateDto movieWithRateDto = movieService.getByIdWithRate(id);
-        List<Review> reviewList = reviewService.getByMovieId(id);
-
-        model.addAttribute("movie", movieWithRateDto);
-        model.addAttribute("reviewList", reviewList);
-        return "movie-detail";
     }
 
     @GetMapping("/add")
@@ -56,16 +45,56 @@ public class MovieController {
 
     @PostMapping("/add")
     public String add(
-        @Valid @ModelAttribute MovieWithRateDto movieDto,
-        BindingResult bindingResult
+            @Valid @ModelAttribute MovieDetailDto movieDto,
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) return "movie-form";
+
         Movie movie = Movie.builder()
                 .title(movieDto.getTitle())
-                .releasedYear(movieDto.getReleasedYear())
+                .releaseYear(movieDto.getReleasedYear())
                 .build();
 
         movieService.create(movie);
         return "redirect:/movie";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("movie", movieService.getById(id));
+        return "movie-form";
+    }
+
+    @PostMapping("/edit")
+    public String edit(
+            @Valid @ModelAttribute MovieDto dto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) return "movie-form";
+
+        Movie movie = movieService.getById(dto.getId());
+        movie.setTitle(dto.getTitle());
+        movie.setReleaseYear(dto.getReleasedYear());
+        movieService.update(movie);
+        return "redirect:/movie";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(
+            @PathVariable Integer id
+    ) {
+        movieService.delete(id);
+        return "redirect:/movie";
+    }
+
+
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable Integer id, Model model) {
+        MovieDetailDto movieDetailDto = movieService.getByIdWithRate(id);
+        List<Review> reviewList = reviewService.getByMovieId(id);
+
+        model.addAttribute("movie", movieDetailDto);
+        model.addAttribute("reviewList", reviewList);
+        return "movie-detail";
     }
 }
