@@ -2,16 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${movie.title}"></title>
+    <title th:text="${movieDetailDto.title}"></title>
     <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
 <body class="container">
-<h1 th:text="${movie.title}"></h1>
-<h3 th:text="${movie.releasedYear}"></h3>
-<h3 th:text="${movie.avgRating}"></h3>
+<h1 th:text="${movieDetailDto.title}"></h1>
+<h3 th:text="${movieDetailDto.releasedYear}"></h3>
+<h3 th:text="${movieDetailDto.avgRating}"></h3>
 <p>
-<form th:action="@{'/movie/' + ${movie.id} + '/review/add'}" method="get" style="display:inline;">
-    <input type="hidden" name="movieId" th:value="${movie.id}" />
+<form th:action="@{'/movieDetailDto/' + ${movieDetailDto.id} + '/review/add'}" method="get" style="display:inline;">
+    <input type="hidden" name="movieDetailDtoId" th:value="${movieDetailDto.id}" />
     <button type="submit" class="btn">
         ➕ 리뷰 추가
     </button>
@@ -20,7 +20,7 @@
 <div class="review-box" th:each="review : ${reviewList}">
     <p>
     <div class="star-ratings">
-        <div class="star-ratings-fill" th:style="'width:' + (${movie.avgRating} / 5.0 * 100) + '%'">
+        <div class="star-ratings-fill" th:style="'width:' + (${movieDetailDto.avgRating} / 5.0 * 100) + '%'">
             <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
         </div>
         <div class="star-ratings-base">
