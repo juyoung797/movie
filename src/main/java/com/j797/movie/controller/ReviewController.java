@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -18,12 +19,23 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
+    private User getCurrentUser(HttpSession session) {
+        return (User) session.getAttribute("user");
+    }
 
     @GetMapping("/movie/{movieId}/review/add")
     public String addForm(
+            HttpSession session,
             @PathVariable Integer movieId,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
+        User user = getCurrentUser(session);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("alertMsg", "로그인이 필요합니다.");
+            return "redirect:/login";
+        }
+
         ReviewDto reviewDto = new ReviewDto();
         reviewDto.setMovieId(movieId);
         model.addAttribute("reviewDto", reviewDto);
@@ -35,25 +47,27 @@ public class ReviewController {
             @PathVariable Integer movieId,
             @Valid @ModelAttribute ReviewDto reviewDto,
             BindingResult bindingResult,
-            HttpSession session
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         if (bindingResult.hasErrors()) return "review-form";
 
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
+        User user = getCurrentUser(session);
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("alertMsg", "로그인이 필요합니다.");
             return "redirect:/login";
         }
 
         Review review = Review.builder()
                 .movieId(reviewDto.getMovieId())
-                .userId(currentUser.getId())
+                .userId(user.getId())
                 .rating(reviewDto.getRating())
                 .comment(reviewDto.getComment())
                 .reviewedAt(LocalDateTime.now())
                 .build();
 
         reviewService.create(review);
-        System.out.println("생성완료");
         return "redirect:/movie/detail/" + reviewDto.getMovieId();
     }
 
@@ -62,8 +76,17 @@ public class ReviewController {
             @PathVariable Integer id,
             Model model
     ) {
-        model.addAttribute("review", reviewService.getById(id));
-        return "review-form";
+        Review review = reviewService.getById(id);
+        if (review != null) {
+            ReviewDto reviewDto = new ReviewDto();
+            reviewDto.setId(review.getId());
+            reviewDto.setMovieId(review.getMovieId());
+            reviewDto.setComment(review.getComment());
+            reviewDto.setRating(review.getRating());
+            model.addAttribute("reviewDto", reviewDto);
+            return "review-form";
+        }
+        return "redirect:/movie/detail/" + id;
     }
 
     @PostMapping("/review")

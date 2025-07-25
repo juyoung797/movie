@@ -47,7 +47,6 @@ public class SignupController {
                 .build();
 
         userService.create(user);
-        System.out.println("SignupDto is null? " + (SignupDto == null));
 
         return "redirect:/login?registered";
     }

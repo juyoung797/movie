@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/styles.css}">
     <title>리뷰 작성</title>
 </head>
-<body>
+<body class="container">
 <h1>리뷰 작성</h1>
 
 <form th:action="@{'/movie/' + ${reviewDto.movieId} + '/review/add'}"
@@ -35,7 +35,7 @@
     <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="error"></div>
 
     <button type="submit">리뷰 등록</button>
-    <a th:href="@{'/movie/' + ${reviewDto.movieId}}">취소</a>
+    <a th:href="@{'/movie/detail/' + ${reviewDto.movieId}}" class="cancel">취소</a>
 </form>
 
 

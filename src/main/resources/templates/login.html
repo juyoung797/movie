@@ -8,7 +8,10 @@
     <link rel="stylesheet" th:href="@{/styles.css}">
     <title>🔑 로그인</title>
 </head>
-<body>
+<body class="container">
+<div th:if="${alertMsg}" class="alert">
+    <p th:text="${alertMsg}"></p>
+</div>
 <h1>🔑 로그인</h1>
 <div th:if="${param.registered}" class="success">
     🎉 회원가입이 완료되었습니다! 로그인 해주세요.

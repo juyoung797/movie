@@ -5,32 +5,78 @@
     <title th:text="${movieDetailDto.title}"></title>
     <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
-<body class="container">
-<h1 th:text="${movieDetailDto.title}"></h1>
-<h3 th:text="${movieDetailDto.releasedYear}"></h3>
-<h3 th:text="${movieDetailDto.avgRating}"></h3>
+<body class="container container-large">
+
+<table>
+    <thead>
+    <tr>
+        <th>제목</th>
+        <th>개봉년도</th>
+        <th>평점</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${movieDetailDto.title}"></td>
+        <td th:text="${movieDetailDto.releasedYear}"></td>
+        <td th:text="${movieDetailDto.avgRating}"></td>
+    </tr>
+    </tbody>
+</table>
+
 <p>
-<form th:action="@{'/movieDetailDto/' + ${movieDetailDto.id} + '/review/add'}" method="get" style="display:inline;">
-    <input type="hidden" name="movieDetailDtoId" th:value="${movieDetailDto.id}" />
+<form th:action="@{'/movie/' + ${movieDetailDto.id} + '/review/add'}" method="get" style="display:inline;">
+    <input type="hidden" name="Id" th:value="${movieDetailDto.id}" />
     <button type="submit" class="btn">
         ➕ 리뷰 추가
     </button>
 </form>
 </p>
-<div class="review-box" th:each="review : ${reviewList}">
-    <p>
-    <div class="star-ratings">
-        <div class="star-ratings-fill" th:style="'width:' + (${movieDetailDto.avgRating} / 5.0 * 100) + '%'">
-            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-        <div class="star-ratings-base">
-            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-        </div>
-    </div>
-    <span th:text="${review.comment}">기대 이상이었어요!</span><br>
-    <small th:text="${#temporals.format(review.reviewedAt, 'yyyy.MM.dd HH:mm')}"></small>
-    </p>
-    <hr>
-</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>사용자</th>
+        <th>리뷰</th>
+        <th>평점</th>
+        <th>작성날짜</th>
+        <th>액션</th>
+    </tr>
+    </thead>
+    <tbody th:each="review : ${reviewList}">
+    <tr>
+        <td th:text="${review.id}"></td>
+        <td th:text="${review.userId}"></td>
+        <td th:text="${review.comment}"></td>
+        <td>
+            <div class="star-ratings">
+                <div class="star-ratings-fill" th:style="'width:' + (${movieDetailDto.avgRating} / 5.0 * 100) + '%'">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <div class="star-ratings-base">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+            </div>
+        </td>
+        <td th:text="${#temporals.format(review.reviewedAt, 'yyyy-MM-dd HH:mm')}"></td>
+        <!-- 수정,삭제-->
+        <td>
+            <a th:href="@{'/review/' + ${review.id}}" class="btn">수정</a>
+            <form th:action="@{'/review/' + ${review.id}}" method="post" style="display:inline;">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!--<div class="review-box" th:each="review : ${reviewList}">-->
+<!--    <p>-->
+
+<!--    <span th:text="${review.comment}">기대 이상이었어요!</span><br>-->
+<!--    <small th:text="${#temporals.format(review.reviewedAt, 'yyyy.MM.dd HH:mm')}"></small>-->
+<!--    </p>-->
+<!--    <hr>-->
+<!--</div>-->
 </body>
 </html>

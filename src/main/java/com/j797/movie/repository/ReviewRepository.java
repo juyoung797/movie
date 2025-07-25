@@ -1,7 +1,9 @@
 package com.j797.movie.repository;
 
+import com.j797.movie.model.Movie;
 import com.j797.movie.model.Review;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -49,7 +51,12 @@ public class ReviewRepository {
 
     public Optional<Review> findById(int id) {
         String sql = "SELECT * FROM reviews WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, reviewRowMapper, id));
+        try {
+            Review review = jdbcTemplate.queryForObject(sql, reviewRowMapper, id);
+            return Optional.ofNullable(review);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public int update(Review review) {

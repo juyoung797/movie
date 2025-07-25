@@ -1,9 +1,25 @@
+@font-face {
+    font-family: 'GowunDodum-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'GowunDodum-Regular';
+    box-sizing: border-box;
+}
+
 body.container {
   max-width: 600px;
   margin: 40px auto;
   font-family: Arial, sans-serif;
   line-height: 1.6;
   color: #333;
+}
+
+body.container-large {
+    max-width: 900px;
 }
 
 h1 { text-align: center; margin-bottom: 24px; }
@@ -17,9 +33,15 @@ h1 { text-align: center; margin-bottom: 24px; }
   box-sizing: border-box;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], textarea {
   width: 100%; padding: 8px; margin-top: 4px; margin-bottom: 12px;
   border: 1px solid #bbb; border-radius: 4px;
+  outline: none;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4a90e2;
 }
 
 button, .btn {
