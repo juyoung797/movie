@@ -81,9 +81,9 @@ public class ReviewController {
             RedirectAttributes redirectAttributes
     ) {
         Review review = reviewService.getById(id);
-        if (!Objects.equals(review.getUserId(), getCurrentUser(session).getId())) {
+        if (getCurrentUser(session) == null || (!Objects.equals(review.getUserId(), getCurrentUser(session).getId()))) {
             redirectAttributes.addFlashAttribute("alertMsg", "권한이 없습니다.");
-            return "redirect:/movie/detail/" + id;
+            return "redirect:/movie/detail/" + review.getMovieId();
         }
         if (review != null) {
             ReviewDto reviewDto = new ReviewDto();
@@ -94,7 +94,7 @@ public class ReviewController {
             model.addAttribute("reviewDto", reviewDto);
             return "review-form";
         }
-        return "redirect:/movie/detail/" + id;
+        return "redirect:/movie/detail/" + review.getMovieId();
     }
 
     @PostMapping("/review")
@@ -119,8 +119,7 @@ public class ReviewController {
     public String delete(
             @PathVariable Integer id
     ) {
-        Integer movieId = reviewService.getById(id).getMovieId();
         reviewService.delete(id);
-        return "redirect:/movie/detail/" + movieId;
+        return "redirect:/movie/detail/" + reviewService.getById(id).getMovieId();
     }
 }
