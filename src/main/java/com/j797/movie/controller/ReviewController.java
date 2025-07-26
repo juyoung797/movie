@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
+
     private User getCurrentUser(HttpSession session) {
         return (User) session.getAttribute("user");
     }
@@ -74,9 +76,15 @@ public class ReviewController {
     @GetMapping("/review/{id}")
     public String editForm(
             @PathVariable Integer id,
-            Model model
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         Review review = reviewService.getById(id);
+        if (!Objects.equals(review.getUserId(), getCurrentUser(session).getId())) {
+            redirectAttributes.addFlashAttribute("alertMsg", "권한이 없습니다.");
+            return "redirect:/movie/detail/" + id;
+        }
         if (review != null) {
             ReviewDto reviewDto = new ReviewDto();
             reviewDto.setId(review.getId());
@@ -91,17 +99,26 @@ public class ReviewController {
 
     @PostMapping("/review")
     public String edit(
-            @Valid @ModelAttribute ReviewDto reviewdto,
-            BindingResult bindingResult
+            @Valid @ModelAttribute ReviewDto reviewDto,
+            BindingResult bindingResult,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
     ) {
-        return "redirect:/movie/detail/" + reviewdto.getMovieId();
+        Review review = Review.builder()
+                .id(reviewDto.getId())
+                .rating(reviewDto.getRating())
+                .comment(reviewDto.getComment())
+                .build();
+        reviewService.update(review);
+        return "redirect:/movie/detail/" + reviewDto.getMovieId();
     }
 
     @PostMapping("/review/{id}")
     public String delete(
             @PathVariable Integer id
     ) {
+        Integer movieId = reviewService.getById(id).getMovieId();
         reviewService.delete(id);
-        return "redirect:/movie/detail/" + id;
+        return "redirect:/movie/detail/" + movieId;
     }
 }

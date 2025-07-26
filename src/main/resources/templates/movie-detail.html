@@ -26,7 +26,7 @@
 
 <p>
 <form th:action="@{'/movie/' + ${movieDetailDto.id} + '/review/add'}" method="get" style="display:inline;">
-    <input type="hidden" name="Id" th:value="${movieDetailDto.id}" />
+    <input type="hidden" name="id" th:value="${movieDetailDto.id}" />
     <button type="submit" class="btn">
         ➕ 리뷰 추가
     </button>
@@ -51,7 +51,7 @@
         <td th:text="${review.comment}"></td>
         <td>
             <div class="star-ratings">
-                <div class="star-ratings-fill" th:style="'width:' + (${movieDetailDto.avgRating} / 5.0 * 100) + '%'">
+                <div class="star-ratings-fill" th:style="'width:' + (${review.rating} / 5.0 * 100) + '%'">
                     <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                 </div>
                 <div class="star-ratings-base">
@@ -62,21 +62,13 @@
         <td th:text="${#temporals.format(review.reviewedAt, 'yyyy-MM-dd HH:mm')}"></td>
         <!-- 수정,삭제-->
         <td>
-            <a th:if=${review.userid==} th:href="@{'/review/' + ${review.id}}" class="btn">수정</a>
-            <form th:action="@{'/review/' + ${review.id}}" method="post" style="display:inline;">
+            <a th:if="${user != null and review.userId == user.id}" th:href="@{'/review/' + ${review.id}}" class="btn">수정</a>
+            <form th:if="${user != null and review.userId == user.id}" th:action="@{'/review/' + ${review.id}}" method="post" style="display:inline;">
                 <button type="submit">삭제</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-<!--<div class="review-box" th:each="review : ${reviewList}">-->
-<!--    <p>-->
-
-<!--    <span th:text="${review.comment}">기대 이상이었어요!</span><br>-->
-<!--    <small th:text="${#temporals.format(review.reviewedAt, 'yyyy.MM.dd HH:mm')}"></small>-->
-<!--    </p>-->
-<!--    <hr>-->
-<!--</div>-->
 </body>
 </html>
