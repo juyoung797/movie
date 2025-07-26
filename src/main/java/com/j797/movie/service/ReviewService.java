@@ -19,7 +19,7 @@ public class ReviewService {
     }
 
     public Review getById(int id) {
-        return reviewRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 영화를 찾을 수 없습니다."));
+        return reviewRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 리뷰를 찾을 수 없습니다."));
     }
 
     public List<Review> getByMovieId(int id) {

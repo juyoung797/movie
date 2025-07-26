@@ -31,9 +31,11 @@ public class MovieController {
     }
 
     @GetMapping
-    public String list(Model model) {
+    public String list(HttpSession session, Model model) {
         List<MovieDetailDto> movies = movieService.getAllWithRates();
+        User user = getCurrentUser(session);
         model.addAttribute("movies", movies);
+        model.addAttribute("user", user);
         return "movie-list";
     }
 

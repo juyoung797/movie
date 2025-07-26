@@ -34,7 +34,7 @@
     </label>
     <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="error"></div>
 
-    <button type="submit" th:text="${reviewDto.id} != null ? '리뷰 수정' : '리뷰 등록'">리뷰 등록</button>
+    <button type="submit" th:text="${reviewDto.id} != null ? '✏️ 리뷰 수정' : '➕ 리뷰 등록'">리뷰 등록</button>
     <a th:href="@{'/movie/detail/' + ${reviewDto.movieId}}" class="cancel">취소</a>
 </form>
 

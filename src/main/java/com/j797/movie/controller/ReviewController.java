@@ -119,7 +119,8 @@ public class ReviewController {
     public String delete(
             @PathVariable Integer id
     ) {
+        Review review = reviewService.getById(id);
         reviewService.delete(id);
-        return "redirect:/movie/detail/" + reviewService.getById(id).getMovieId();
+        return "redirect:/movie/detail/" + review.getMovieId();
     }
 }
