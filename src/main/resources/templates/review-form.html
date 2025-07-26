@@ -6,20 +6,20 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" th:href="@{/styles.css}">
-    <title>리뷰 작성</title>
+    <title th:text="${reviewDto.id} != null ? '리뷰 수정' : '리뷰 작성'">리뷰 작성</title>
 </head>
 <body class="container">
-<h1>리뷰 작성</h1>
+<h1 th:text="${reviewDto.id} != null ? '리뷰 수정' : '리뷰 작성'">리뷰 작성</h1>
 
-<form th:action="@{'/movie/' + ${reviewDto.movieId} + '/review/add'}"
+<form th:action="${reviewDto.id} != null ? @{/review} : @{'/movie/' + ${reviewDto.movieId} + '/review/add'}"
       method="post"
       th:object="${reviewDto}"
       class="form-container">
 
-    <!-- 리뷰 ID (수정용이면, 아니면 비워도 됨) -->
+    <!-- 리뷰 ID (수정 시 포함됨) -->
     <input type="hidden" th:field="*{id}" />
 
-    <!-- 영화 ID는 URL 경로 변수로 받지만 POST 시에도 넘기기 위해 히든으로 포함 -->
+    <!-- 영화 ID는 항상 필요 -->
     <input type="hidden" th:field="*{movieId}" />
 
     <label>
@@ -34,10 +34,9 @@
     </label>
     <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="error"></div>
 
-    <button type="submit">리뷰 등록</button>
+    <button type="submit" th:text="${reviewDto.id} != null ? '리뷰 수정' : '리뷰 등록'">리뷰 등록</button>
     <a th:href="@{'/movie/detail/' + ${reviewDto.movieId}}" class="cancel">취소</a>
 </form>
-
 
 </body>
 </html>

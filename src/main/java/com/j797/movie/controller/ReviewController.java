@@ -106,6 +106,8 @@ public class ReviewController {
     ) {
         Review review = Review.builder()
                 .id(reviewDto.getId())
+                .movieId(reviewDto.getMovieId())
+                .userId(getCurrentUser(session).getId())
                 .rating(reviewDto.getRating())
                 .comment(reviewDto.getComment())
                 .build();
