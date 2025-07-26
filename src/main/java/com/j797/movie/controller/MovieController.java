@@ -96,12 +96,12 @@ public class MovieController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@PathVariable Integer id, Model model, HttpSession session) {
         MovieDetailDto movieDetailDto = movieService.getByIdWithRate(id);
         List<Review> reviewList = reviewService.getByMovieId(id);
-
         model.addAttribute("movieDetailDto", movieDetailDto);
         model.addAttribute("reviewList", reviewList);
+        model.addAttribute("user", getCurrentUser(session));
         return "movie-detail";
     }
 }
